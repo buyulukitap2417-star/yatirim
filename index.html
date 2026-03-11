@@ -34,8 +34,8 @@
         <div class="bg-white p-8 rounded-[2.5rem] shadow-2xl flex flex-col items-center gap-4 animate-in zoom-in-95 border border-white/20">
             <div class="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full loader-spin"></div>
             <div class="text-center">
-                <p id="update-status-text" class="font-black text-slate-800 tracking-tight uppercase text-sm">Veriler Senkronize Ediliyor</p>
-                <p id="update-sub-text" class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1 text-indigo-600">CollectAPI Güvenli Bağlantı</p>
+                <p id="update-status-text" class="font-black text-slate-800 tracking-tight uppercase text-sm">Veriler Uzmanpara Üzerinden Okunuyor</p>
+                <p id="update-sub-text" class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1 text-indigo-600">Proxy Destekli Canlı Akış</p>
             </div>
         </div>
     </div>
@@ -48,7 +48,7 @@
         <div class="animate-in fade-in duration-700">
             <div class="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full loader-spin mx-auto mb-6 shadow-xl shadow-indigo-100"></div>
             <p class="text-slate-800 font-black tracking-tighter uppercase text-lg text-indigo-600">InvestAI Terminali</p>
-            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-[0.3em]">Hassas Veri Portu Hazırlanıyor</p>
+            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-[0.3em]">Borsa Verileri Senkronize Ediliyor</p>
         </div>
     </div>
 
@@ -61,13 +61,12 @@
                     <i data-lucide="trending-up" class="text-white w-10 h-10"></i>
                 </div>
                 <h1 class="text-4xl font-black text-slate-800 tracking-tighter leading-none mb-2 text-indigo-600 uppercase">InvestAI</h1>
-                <p class="text-slate-400 text-xs font-bold uppercase tracking-widest leading-relaxed mb-8">BIST Canlı Analiz Terminali</p>
+                <p class="text-slate-400 text-xs font-bold uppercase tracking-widest leading-relaxed mb-8">Canlı Web Veri Okuma Sistemi</p>
                 
                 <div class="space-y-4">
                     <input id="auth-email" type="email" placeholder="E-posta" class="w-full p-4 bg-slate-50 rounded-2xl border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium text-sm">
                     <input id="auth-password" type="password" placeholder="Şifre" class="w-full p-4 bg-slate-50 rounded-2xl border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium text-sm">
-                    <div id="auth-error" class="hidden text-rose-500 text-[10px] font-black p-4 bg-rose-50 rounded-2xl text-center uppercase tracking-widest border border-rose-100"></div>
-                    <button id="auth-main-btn" onclick="handleAuth()" class="w-full py-4 bg-indigo-600 text-white rounded-2xl font-black shadow-xl shadow-indigo-200 hover:bg-indigo-700 transition-all active:scale-95 tracking-widest uppercase text-xs">TERMİNALE GİRİŞ</button>
+                    <button id="auth-main-btn" onclick="handleAuth()" class="w-full py-4 bg-indigo-600 text-white rounded-2xl font-black shadow-xl shadow-indigo-200 hover:bg-indigo-700 transition-all active:scale-95 tracking-widest uppercase text-xs">GİRİŞ YAP</button>
                     <div class="mt-6">
                         <button id="auth-toggle-btn" onclick="toggleAuthMode()" class="text-indigo-600 text-[10px] font-black uppercase hover:underline tracking-widest">HESABINIZ YOK MU? KAYIT OLUN</button>
                     </div>
@@ -80,14 +79,12 @@
     <div id="app-screen" class="hidden min-h-screen p-4 md:p-8">
         <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            <!-- Sol Panel -->
             <div class="lg:col-span-2 space-y-6">
-                <!-- Header -->
                 <header class="flex flex-wrap gap-4 justify-between items-center bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100">
                     <div class="flex items-center gap-5">
                         <div class="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-indigo-100"><i data-lucide="shield-check"></i></div>
                         <div>
-                            <h1 class="text-2xl font-black text-slate-800 tracking-tighter uppercase">Invest Terminal</h1>
+                            <h1 class="text-2xl font-black text-slate-800 tracking-tighter uppercase">Terminal</h1>
                             <div class="flex items-center gap-2">
                                 <span class="w-2 h-2 bg-emerald-500 rounded-full live-badge"></span>
                                 <p id="user-display" class="text-slate-400 text-[9px] font-black uppercase tracking-widest"></p>
@@ -96,26 +93,25 @@
                     </div>
                     <div class="flex items-center gap-3">
                         <button onclick="fetchLivePrices(true)" class="px-5 py-3 bg-slate-50 text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-2xl transition-all flex items-center gap-2 text-[10px] font-black tracking-widest border border-slate-200 shadow-sm group">
-                            <i data-lucide="refresh-cw" size="16" id="refresh-icon" class="group-hover:rotate-180 transition-transform duration-500"></i>
-                            <span class="hidden md:block">VERİ GÜNCELLE</span>
+                            <i data-lucide="refresh-cw" size="16" id="refresh-icon"></i>
+                            <span class="hidden md:block uppercase tracking-tighter">SİTEYİ OKU & GÜNCELLE</span>
                         </button>
                         <button onclick="handleLogout()" class="p-3 text-slate-300 hover:text-rose-500 transition-colors"><i data-lucide="log-out" size="22"></i></button>
-                        <button onclick="toggleModal(true)" class="bg-indigo-600 text-white px-8 py-3.5 rounded-2xl font-black flex items-center gap-2 shadow-2xl shadow-indigo-200 hover:bg-indigo-700 active:scale-95 transition-all tracking-widest text-xs uppercase"><i data-lucide="plus" size="20"></i> Varlık Ekle</button>
+                        <button onclick="toggleModal(true)" class="bg-indigo-600 text-white px-8 py-3.5 rounded-2xl font-black flex items-center gap-2 shadow-2xl shadow-indigo-200 hover:bg-indigo-700 active:scale-95 transition-all tracking-widest text-xs uppercase"><i data-lucide="plus" size="20"></i> Ekle</button>
                     </div>
                 </header>
 
-                <!-- Portföy Özetleri -->
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 font-sans">
-                    <div class="md:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="md:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center sm:text-left">
                         <div class="bg-white p-6 rounded-[2.2rem] border border-slate-100 shadow-sm relative overflow-hidden group">
                             <div class="absolute -right-4 -bottom-4 opacity-5 text-indigo-900 group-hover:scale-110 transition-transform"><i data-lucide="wallet-2" size="80"></i></div>
-                            <div class="text-slate-400 text-[9px] font-black mb-2 uppercase tracking-[0.2em] relative z-10">PORTFÖY DEĞERİ</div>
-                            <div id="total-value" class="text-2xl font-black text-slate-800 tracking-tighter relative z-10">₺0,00</div>
+                            <div class="text-slate-400 text-[9px] font-black mb-2 uppercase tracking-[0.2em] relative z-10">TOPLAM DEĞER</div>
+                            <div id="total-value" class="text-2xl font-black text-slate-800 tracking-tighter relative z-10 leading-none">₺0,00</div>
                         </div>
                         <div id="pnl-card" class="bg-white p-6 rounded-[2.2rem] border border-slate-100 shadow-sm border-l-8 relative overflow-hidden group">
                             <div class="absolute -right-4 -bottom-4 opacity-5 text-slate-900 group-hover:scale-110 transition-transform"><i data-lucide="trending-up" size="80"></i></div>
-                            <div class="text-slate-400 text-[9px] font-black mb-2 uppercase tracking-[0.2em] relative z-10">NET KAZANÇ</div>
-                            <div id="total-pnl" class="text-2xl font-black tracking-tighter relative z-10">₺0,00</div>
+                            <div class="text-slate-400 text-[9px] font-black mb-2 uppercase tracking-[0.2em] relative z-10">KÂR / ZARAR</div>
+                            <div id="total-pnl" class="text-2xl font-black tracking-tighter relative z-10 leading-none">₺0,00</div>
                         </div>
                         <div class="bg-white p-6 rounded-[2.2rem] border border-slate-100 shadow-sm relative overflow-hidden group">
                             <div class="absolute -right-4 -bottom-4 opacity-5 text-slate-900 group-hover:scale-110 transition-transform"><i data-lucide="zap" size="80"></i></div>
@@ -128,46 +124,40 @@
                     </div>
                 </div>
 
-                <!-- Asset Table -->
                 <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden min-h-[450px]">
                     <div class="p-6 border-b border-slate-100 bg-slate-50/40 flex justify-between items-center">
                         <div class="flex items-center gap-3">
-                            <i data-lucide="pie-chart" size="18" class="text-indigo-600"></i>
-                            <span class="text-[11px] font-black text-slate-500 uppercase tracking-[0.25em]">Varlık Pozisyonları</span>
+                            <i data-lucide="layers" size="18" class="text-indigo-600"></i>
+                            <span class="text-[11px] font-black text-slate-500 uppercase tracking-[0.25em]">Hisse Bazlı Pozisyonlar</span>
                         </div>
-                        <div id="last-update-time" class="text-[9px] text-indigo-600 font-black uppercase bg-indigo-50 px-4 py-1.5 rounded-full tracking-widest border border-indigo-100 shadow-sm uppercase tracking-tighter">PİYASA SENKRONİZE OLUYOR...</div>
+                        <div id="last-update-time" class="text-[9px] text-indigo-600 font-black uppercase bg-indigo-50 px-4 py-1.5 rounded-full tracking-widest border border-indigo-100 shadow-sm uppercase tracking-tighter tracking-widest">SAYFA OKUNUYOR...</div>
                     </div>
                     <div id="asset-list" class="divide-y divide-slate-100"></div>
                 </div>
             </div>
 
-            <!-- Sağ Panel -->
             <div class="space-y-6">
-                <!-- AI Advisor -->
-                <div class="bg-indigo-900 text-white p-10 rounded-[3rem] shadow-2xl relative overflow-hidden border border-white/5 group">
+                <div class="bg-slate-900 text-white p-10 rounded-[3rem] shadow-2xl relative overflow-hidden border border-white/5 group">
                     <div class="relative z-10">
                         <div class="flex items-center gap-4 mb-8">
-                            <div class="bg-white/20 p-4 rounded-[1.5rem] shadow-lg backdrop-blur-md border border-white/10 group-hover:rotate-6 transition-transform">
-                                <i data-lucide="brain-circuit" class="text-white" size="24"></i>
-                            </div>
+                            <div class="bg-indigo-600 p-4 rounded-[1.5rem] shadow-lg backdrop-blur-md border border-white/10"><i data-lucide="brain-circuit" class="text-white" size="24"></i></div>
                             <div>
-                                <h2 class="text-xl font-black tracking-tight uppercase leading-none">STOK ANALİZİ</h2>
-                                <p class="text-[9px] text-indigo-300 font-black mt-1 tracking-widest uppercase">Gerçek Zamanlı AI</p>
+                                <h2 class="text-xl font-bold tracking-tight uppercase leading-none">ANALİZ MERKEZİ</h2>
+                                <p class="text-[9px] text-indigo-300 font-black mt-1 tracking-widest uppercase">Anlık Web Analizi</p>
                             </div>
                         </div>
                         <div id="ai-content" class="bg-white/10 rounded-[1.8rem] p-6 mb-8 text-[12px] min-h-[180px] border border-white/5 leading-relaxed font-medium text-slate-100">
-                            <p class="opacity-60 italic text-center">Hangi fiyattan aldığınızı ve şu anki piyasa fiyatını karşılaştırıp en doğru stratejiyi Türkçe olarak sunacağım.</p>
+                            <p class="opacity-60 italic text-center">Web sitesinden okunan anlık fiyatlar ile maliyetlerinizi kıyaslayıp size özel tavsiyeler üreteceğim.</p>
                         </div>
-                        <button onclick="getAIAdvice()" id="ai-btn" class="w-full py-5 bg-white text-indigo-900 rounded-[1.25rem] font-black shadow-xl hover:bg-indigo-50 transition-all active:scale-95 tracking-widest text-xs uppercase">ANALİZ RAPORU ÜRET</button>
+                        <button onclick="getAIAdvice()" id="ai-btn" class="w-full py-5 bg-white text-indigo-900 rounded-[1.25rem] font-black shadow-xl hover:bg-indigo-50 transition-all active:scale-95 tracking-widest text-xs uppercase">ANALİZİ BAŞLAT</button>
                     </div>
-                    <div class="absolute -bottom-16 -left-16 w-64 h-64 bg-indigo-600 rounded-full blur-[100px] opacity-30"></div>
+                    <div class="absolute -bottom-16 -left-16 w-64 h-64 bg-indigo-600 rounded-full blur-[100px] opacity-20"></div>
                 </div>
 
-                <!-- Sistem Kayıtları -->
                 <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm relative">
                     <h3 class="font-black text-slate-800 flex items-center gap-3 mb-6 uppercase text-[10px] tracking-widest">
-                        <i data-lucide="terminal-square" class="text-indigo-50" size="18"></i> 
-                        API Terminal Kaydı
+                        <i data-lucide="globe" class="text-indigo-500" size="18"></i> 
+                        Web Okuma Günlüğü
                     </h3>
                     <div id="log-container" class="log-container space-y-3 text-[11px] font-medium pr-2"></div>
                 </div>
@@ -175,58 +165,52 @@
         </div>
     </div>
 
-    <!-- Modals -->
+    <!-- Modals (Giriş/Ekleme/Detay) -->
     <div id="modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-[3rem] w-full max-w-md shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200" id="modal-box">
-            <div class="p-8 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-                <div class="flex items-center gap-3">
-                    <i data-lucide="plus-circle" class="text-indigo-600"></i>
-                    <h3 id="modal-title" class="text-xl font-black text-slate-800 tracking-tighter uppercase leading-none">VARLIK KAYDI</h3>
-                </div>
-                <button onclick="toggleModal(false)" class="text-slate-400 hover:text-rose-500 transition-all p-2 bg-white rounded-full shadow-sm"><i data-lucide="x" size="20"></i></button>
+        <div class="bg-white rounded-[3rem] w-full max-w-md shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+            <div class="p-8 border-b border-slate-100 flex justify-between items-center bg-slate-50/50 text-indigo-600 font-black uppercase">
+                <div class="flex items-center gap-3"><i data-lucide="plus-circle"></i><h3 id="modal-title" class="text-xl tracking-tighter">VARLIK EKLE</h3></div>
+                <button onclick="toggleModal(false)" class="text-slate-400 hover:text-rose-500 p-2"><i data-lucide="x"></i></button>
             </div>
             <form id="asset-form" class="p-10 space-y-6">
                 <input type="hidden" id="editingId" value="">
                 <div class="space-y-1.5">
-                    <label class="block text-[10px] font-black text-slate-400 uppercase ml-1 tracking-[0.2em]">YATIRIM SINIFI</label>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest">Tür</label>
                     <select id="type" class="w-full p-4 bg-slate-50 rounded-2xl ring-1 ring-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none appearance-none font-black text-xs">
-                        <option value="hisse">📈 BIST HİSSE SENEDİ</option>
+                        <option value="hisse">📈 BİST HİSSE SENEDİ</option>
                         <option value="kripto">₿ KRİPTO PARA</option>
                         <option value="altin">🟡 ALTIN / GRAM</option>
                         <option value="doviz">💵 DÖVİZ / NAKİT</option>
                     </select>
                 </div>
                 <div class="space-y-1.5">
-                    <label class="block text-[10px] font-black text-slate-400 uppercase ml-1 tracking-[0.2em]">HİSSE KODU (Örn: THYAO)</label>
-                    <input id="symbol" type="text" placeholder="Sembol" required class="w-full p-4 bg-slate-50 rounded-2xl ring-1 ring-slate-200 outline-none uppercase focus:ring-2 focus:ring-indigo-500 font-black text-sm tracking-widest">
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest uppercase">Sembol (örn: THYAO)</label>
+                    <input id="symbol" type="text" placeholder="THYAO" required class="w-full p-4 bg-slate-50 rounded-2xl ring-1 ring-slate-200 outline-none uppercase focus:ring-2 focus:ring-indigo-500 font-black text-sm tracking-widest">
                 </div>
                 <div class="grid grid-cols-2 gap-5">
                     <div class="space-y-1.5">
-                        <label class="block text-[10px] font-black text-slate-400 uppercase ml-1 tracking-[0.2em]">YATIRILAN TL</label>
-                        <input id="totalInvested" type="number" step="any" placeholder="0.00" required class="w-full p-4 bg-slate-50 rounded-2xl ring-1 ring-slate-200 outline-none focus:ring-2 focus:ring-indigo-500 font-black text-sm">
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest">Yatırılan ₺</label>
+                        <input id="totalInvested" type="number" step="any" placeholder="0.00" required class="w-full p-4 bg-slate-50 rounded-2xl ring-1 ring-slate-200 outline-none font-bold">
                     </div>
                     <div class="space-y-1.5">
-                        <label class="block text-[10px] font-black text-slate-400 uppercase ml-1 tracking-[0.2em]">ALIŞ MALİYETİ ₺</label>
-                        <input id="buyPrice" type="number" step="any" placeholder="0.00" required class="w-full p-4 bg-slate-50 rounded-2xl ring-1 ring-slate-200 outline-none focus:ring-2 focus:ring-indigo-500 font-black text-sm">
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest">Maliyet (₺)</label>
+                        <input id="buyPrice" type="number" step="any" placeholder="0.00" required class="w-full p-4 bg-slate-50 rounded-2xl ring-1 ring-slate-200 outline-none font-bold">
                     </div>
                 </div>
-                <div class="p-6 bg-indigo-50 rounded-[1.5rem] text-[10px] text-indigo-700 text-center font-black uppercase border border-indigo-100 shadow-inner tracking-widest leading-relaxed" id="calc-info">Lütfen verileri giriniz...</div>
-                <button type="submit" id="save-btn" class="w-full py-5 bg-indigo-600 text-white rounded-[1.25rem] font-black shadow-2xl shadow-indigo-200 hover:bg-indigo-700 transition-all active:scale-95 tracking-[0.3em] text-xs uppercase">PORTFÖYE İŞLE</button>
+                <div class="p-6 bg-indigo-50 rounded-[1.5rem] text-[10px] text-indigo-700 text-center font-black uppercase tracking-widest" id="calc-info">Veri girişi bekleniyor...</div>
+                <button type="submit" id="save-btn" class="w-full py-5 bg-indigo-600 text-white rounded-[1.25rem] font-black shadow-2xl hover:bg-indigo-700 transition-all tracking-widest text-xs uppercase">KAYDET</button>
             </form>
         </div>
     </div>
 
-    <!-- Detail Modal -->
     <div id="detail-modal" class="fixed inset-0 bg-slate-900/90 backdrop-blur-md z-[150] hidden items-center justify-center p-4">
         <div class="bg-white rounded-[3.5rem] w-full max-w-2xl shadow-2xl p-10 relative border border-white/20">
-            <button onclick="closeDetailModal()" class="absolute top-8 right-8 text-slate-300 hover:text-rose-500 transition-all p-2 bg-slate-100 rounded-full"><i data-lucide="x" size="24"></i></button>
+            <button onclick="closeDetailModal()" class="absolute top-8 right-8 text-slate-300 hover:text-rose-500 p-2"><i data-lucide="x" size="24"></i></button>
             <div id="detail-header" class="mb-10 text-center">
-                <div id="detail-badge" class="inline-block px-4 py-1.5 rounded-full bg-indigo-50 text-indigo-600 text-[10px] font-black mb-4 tracking-[0.2em] uppercase border border-indigo-100">PİYASA ANALİZ MERKEZİ</div>
+                <div class="inline-block px-4 py-1.5 rounded-full bg-indigo-50 text-indigo-600 text-[10px] font-black mb-4 tracking-[0.2em] uppercase">Web Reader Analizi</div>
                 <h2 id="detail-title" class="text-6xl font-black text-slate-800 tracking-tighter uppercase leading-none">VARLIK</h2>
             </div>
-            <div class="h-80 mb-10 bg-slate-50 p-8 rounded-[2.5rem] border border-slate-200 shadow-inner relative">
-                <canvas id="detailChart"></canvas>
-            </div>
+            <div class="h-80 mb-10 bg-slate-50 p-8 rounded-[2.5rem] border border-slate-200 shadow-inner relative"><canvas id="detailChart"></canvas></div>
             <div id="detail-stats" class="grid grid-cols-1 sm:grid-cols-3 gap-6 font-sans"></div>
         </div>
     </div>
@@ -235,48 +219,30 @@
         // --- SİSTEM AYARLARI ---
         const SB_URL = "https://ihkermhphlquvwklwtun.supabase.co";
         const SB_KEY = "sb_publishable_HsvhilHIDDBQezTDiKvkmg_G5y7vELZ";
-        const COLLECT_API_KEY = "7JfbexQLoAIkw0h2YU9o8j:1VRvjiuftPfXVjFoPrO3do";
-        
         const sbClient = supabase.createClient(SB_URL, SB_KEY);
         const geminiApiKey = "";
+
+        // Web Okuma Kaynakları
+        const PROXY = "https://api.allorigins.win/get?url=";
+        const UZMANPARA_URL = "https://uzmanpara.milliyet.com.tr/canli-borsa/";
+        const BIGPARA_URL = "https://bigpara.hurriyet.com.tr/api/v1/borsa/hisseyuzeysel/";
 
         let portfolio = [];
         let currentUser = null;
         let marketPrices = { 'USD': 32.5, 'GA': 2450 }; 
+        let isAppReady = false;
         let allocationChart = null;
         let detailChart = null;
-        let isSimulation = false;
-        let isAppReady = false; // Guard for preventing multiple re-initializations
 
-        // --- GELİŞMİŞ FETCH (EXPONENTIAL BACKOFF) ---
-        async function apiFetch(url, options = {}, retries = 5, delay = 1000) {
-            try {
-                const response = await fetch(url, options);
-                if (response.status === 429 || response.status >= 500) {
-                    if (retries > 0) {
-                        await new Promise(resolve => setTimeout(resolve, delay));
-                        return apiFetch(url, options, retries - 1, delay * 2);
-                    }
-                }
-                return response;
-            } catch (error) {
-                if (retries > 0) {
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                    return apiFetch(url, options, retries - 1, delay * 2);
-                }
-                throw error;
-            }
-        }
-
-        // --- SAYI FORMATLAYICI ---
+        // --- SAYI AYRIŞTIRICI ---
         function cleanPrice(val) {
-            if (val === null || val === undefined) return 0;
+            if (!val) return 0;
             if (typeof val === 'number') return val;
-            let str = val.toString().replace(/[₺$%\s]/g, '').replace(/\./g, '').replace(',', '.');
+            let str = val.toString().replace(/[₺$%\s\.]/g, '').replace(',', '.');
             return parseFloat(str) || 0;
         }
 
-        // --- DOM INITIALIZATION ---
+        // --- AUTH & DOM ---
         window.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
             initAuth();
@@ -303,140 +269,96 @@
             const loader = document.getElementById('loading-overlay');
             try {
                 const { data: { session } } = await sbClient.auth.getSession();
-                
-                // If there's an existing session, start the app immediately
-                if (session) {
-                    onLoginSuccess(session.user);
-                } else {
-                    if (loader) loader.classList.add('hidden');
-                    showAuthScreen();
-                }
-
-                // Listen for future auth changes, but don't re-run success logic if already ready
+                if (session) onLoginSuccess(session.user);
+                else { if (loader) loader.classList.add('hidden'); showAuthScreen(); }
                 sbClient.auth.onAuthStateChange((event, session) => {
-                    if (event === 'SIGNED_IN' && session && !isAppReady) {
-                        onLoginSuccess(session.user);
-                    } else if (event === 'SIGNED_OUT') {
-                        isAppReady = false;
-                        showAuthScreen();
-                    }
+                    if (event === 'SIGNED_IN' && session && !isAppReady) onLoginSuccess(session.user);
+                    else if (event === 'SIGNED_OUT') { isAppReady = false; showAuthScreen(); }
                     if (loader) loader.classList.add('hidden');
                 });
-            } catch (error) {
-                if (loader) loader.classList.add('hidden');
-            }
+            } catch (error) { if (loader) loader.classList.add('hidden'); }
         }
 
         async function handleAuth() {
             const email = document.getElementById('auth-email').value;
             const password = document.getElementById('auth-password').value;
-            const btn = document.getElementById('auth-main-btn');
-            const errorEl = document.getElementById('auth-error');
             if (!email || !password) return;
+            const btn = document.getElementById('auth-main-btn');
             btn.disabled = true;
             try {
                 const { data, error } = await sbClient.auth.signInWithPassword({ email, password });
                 if (error) {
-                    // Try to sign up if login fails (Simple user flow)
                     const signUp = await sbClient.auth.signUp({ email, password });
                     if (signUp.error) throw signUp.error;
                     showNotification("BAŞARILI", "Hesabınız oluşturuldu, giriş yapılıyor.", "success");
                 }
-            } catch (err) { 
-                errorEl.innerText = err.message.toUpperCase(); 
-                errorEl.classList.remove('hidden'); 
-            } finally { 
-                btn.disabled = false; 
-            }
-        }
-
-        function toggleAuthMode() { 
-            const sub = document.getElementById('auth-subtitle');
-            if(sub) sub.innerText = "Hemen bir hesap oluşturun."; 
+            } catch (err) { alert(err.message); } finally { btn.disabled = false; }
         }
 
         function onLoginSuccess(user) {
-            if (isAppReady) return; // Guard for tab switching or multiple triggers
+            if (isAppReady) return;
             isAppReady = true;
-
             currentUser = user;
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('app-screen').classList.remove('hidden');
             document.getElementById('user-display').innerText = user.email;
-            
             fetchPortfolio();
-            // Regular price update interval
             setInterval(() => fetchLivePrices(false), 300000); 
             fetchLivePrices(true);
         }
 
-        function showAuthScreen() { 
-            document.getElementById('auth-screen').classList.remove('hidden'); 
-            document.getElementById('app-screen').classList.add('hidden'); 
-        }
+        function showAuthScreen() { document.getElementById('auth-screen').classList.remove('hidden'); document.getElementById('app-screen').classList.add('hidden'); }
 
-        // --- COLLECT API VERİ MOTORU ---
+        // --- WEB SİTESİNDEN VERİ OKUMA (WEB READER) ---
         async function fetchLivePrices(showPopup = false) {
             const popup = document.getElementById('update-popup');
             const icon = document.getElementById('refresh-icon');
             if (showPopup && popup) popup.classList.replace('hidden', 'flex');
             if (icon) icon.classList.add('loader-spin');
 
-            let errorsEncountered = false;
-
             try {
-                // Fetch Currency, Gold and Stocks
-                const [fxRes, goldRes, stockRes] = await Promise.all([
-                    apiFetch("https://api.collectapi.com/economy/allCurrency", {
-                        headers: { "content-type": "application/json", "authorization": `apikey ${COLLECT_API_KEY}` }
-                    }).then(r => r.json()).catch(() => ({ success: false })),
-                    apiFetch("https://api.collectapi.com/economy/goldPrice", {
-                        headers: { "content-type": "application/json", "authorization": `apikey ${COLLECT_API_KEY}` }
-                    }).then(r => r.json()).catch(() => ({ success: false })),
-                    apiFetch("https://api.collectapi.com/economy/hisse-senedi", {
-                        headers: { "content-type": "application/json", "authorization": `apikey ${COLLECT_API_KEY}` }
-                    }).then(r => r.json()).catch(() => ({ success: false }))
-                ]);
+                // 1. Uzmanpara Canlı Borsa Sayfasını Oku
+                const uzmanUrl = PROXY + encodeURIComponent(UZMANPARA_URL + "?_ts=" + Date.now());
+                const response = await fetch(uzmanUrl).then(r => r.json());
+                const html = response.contents;
 
-                if (fxRes.success) {
-                    const usd = fxRes.result.find(i => i.code === "USD");
-                    if (usd) marketPrices['USD'] = cleanPrice(usd.selling);
-                } else errorsEncountered = true;
-
-                if (goldRes.success) {
-                    const ga = goldRes.result.find(i => i.name === "Gram Altın");
-                    if (ga) marketPrices['GA'] = cleanPrice(ga.selling);
-                } else errorsEncountered = true;
-
-                if (stockRes.success) {
-                    stockRes.result.forEach(stock => {
-                        marketPrices[stock.symbol] = cleanPrice(stock.lastprice);
-                    });
-                } else errorsEncountered = true;
-
-                if (errorsEncountered) {
-                    isSimulation = true;
-                    addLog("API", "Limit aşıldı veya hata oluştu. Simülasyon modu aktif.");
-                    showNotification("DİKKAT", "API limiti nedeniyle tahmini veriler yükleniyor.", "error");
-                    
-                    portfolio.forEach(a => {
-                        const base = marketPrices[a.symbol] || a.buy_price;
-                        marketPrices[a.symbol] = parseFloat((base * (1 + (Math.random()-0.48)*0.0025)).toFixed(2));
-                    });
-                } else {
-                    isSimulation = false;
-                    addLog("SİSTEM", "Piyasa verileri başarıyla senkronize edildi.");
+                // Regex ile fiyat ayıklama: <td id="h_td_fiyat_SYMBOL">PRICE</td>
+                const priceRegex = /id="h_td_fiyat_([A-Z0-9]+)">([0-9\.,]+)<\/td>/g;
+                let match;
+                while ((match = priceRegex.exec(html)) !== null) {
+                    const symbol = match[1];
+                    const price = cleanPrice(match[2]);
+                    marketPrices[symbol] = price;
                 }
 
-                const timeDisp = document.getElementById('last-update-time');
-                if (timeDisp) timeDisp.innerText = isSimulation ? "SİMÜLASYON MODU" : "TERMINAL CANLI: " + new Date().toLocaleTimeString('tr-TR');
+                // 2. Döviz ve Altın Okuma (Regex ile sayfadan ayıkla)
+                const usdMatch = html.match(/Dolar.*?">([0-9\.,]+)<\/td>/);
+                if(usdMatch) marketPrices['USD'] = cleanPrice(usdMatch[1]);
                 
+                const gaMatch = html.match(/Altın \(Gram\).*?">([0-9\.,]+)<\/td>/);
+                if(gaMatch) marketPrices['GA'] = cleanPrice(gaMatch[1]);
+
+                // 3. Fallback: Bigpara API (Hisseler için yedek)
+                for (const asset of portfolio) {
+                    if (asset.type === 'hisse' && !marketPrices[asset.symbol]) {
+                        const bigparaUrl = PROXY + encodeURIComponent(BIGPARA_URL + asset.symbol);
+                        const bRes = await fetch(bigparaUrl).then(r => r.json()).catch(() => null);
+                        if (bRes && bRes.contents) {
+                            const data = JSON.parse(bRes.contents);
+                            if(data.data?.hisseYuzeysel) marketPrices[asset.symbol] = cleanPrice(data.data.hisseYuzeysel.sonFiyat);
+                        }
+                    }
+                }
+
+                addLog("WEB READER", "Uzmanpara sayfası başarıyla okundu.");
+                document.getElementById('last-update-time').innerText = "WEB CANLI: " + new Date().toLocaleTimeString('tr-TR');
                 renderPortfolio();
                 updateAllocationChart();
+                if (showPopup) showNotification("SENKRONİZE EDİLDİ", "Uzmanpara verileri güncellendi.", "success");
 
             } catch (err) {
-                console.error("API Error:", err);
-                addLog("HATA", "Bağlantı kesildi, tekrar deneniyor.");
+                console.error("Scraping Error:", err);
+                addLog("HATA", "Web sitesi okuma hatası.");
             } finally {
                 if (icon) icon.classList.remove('loader-spin');
                 if (showPopup && popup) setTimeout(() => popup.classList.replace('flex', 'hidden'), 800);
@@ -463,7 +385,7 @@
             const action = editingId ? sbClient.from('investments').update(payload).eq('id', editingId) : sbClient.from('investments').insert([payload]);
 
             const { error } = await action;
-            if (!error) { toggleModal(false); fetchPortfolio(); showNotification("BAŞARILI", symbol + " kaydedildi.", "success"); }
+            if (!error) { toggleModal(false); fetchPortfolio(); showNotification("BAŞARILI", symbol + " işlendi.", "success"); }
         }
 
         // --- UI ---
@@ -473,36 +395,36 @@
             let totalVal = 0, totalCost = 0;
 
             if (portfolio.length === 0) {
-                list.innerHTML = `<div class="p-32 text-center text-slate-300 font-black text-[10px] tracking-[0.4em] uppercase">Varlık Pozisyonu Bulunmuyor</div>`;
+                list.innerHTML = `<div class="p-32 text-center text-slate-300 font-black text-[10px] tracking-widest uppercase">Portföy Boş</div>`;
                 updateStats(0, 0);
                 return;
             }
 
             list.innerHTML = portfolio.map(a => {
-                const currentUnitPrice = marketPrices[a.symbol] || a.buy_price;
+                const currentPrice = marketPrices[a.symbol] || a.buy_price;
                 const costAtEntry = a.buy_price * a.amount; 
-                const currentValue = currentUnitPrice * a.amount; 
+                const currentValue = currentPrice * a.amount; 
                 const pnl = currentValue - costAtEntry;
                 const perc = (pnl / costAtEntry) * 100;
                 totalVal += currentValue; totalCost += costAtEntry;
 
                 return `
-                <div class="p-8 flex justify-between items-center hover:bg-slate-50/80 transition-all group bist-card font-sans">
+                <div class="p-8 flex justify-between items-center hover:bg-slate-50 transition-all group bist-card">
                     <div class="flex items-center gap-7">
                         <div class="w-16 h-16 bg-white border border-slate-100 rounded-[1.8rem] flex items-center justify-center font-black text-indigo-600 shadow-sm text-2xl uppercase tracking-tighter">${a.symbol.slice(0,2)}</div>
                         <div>
                             <div class="font-black flex items-center gap-2 text-slate-800 tracking-tighter text-xl leading-none">
                                 ${a.symbol}
-                                <span class="text-[9px] bg-slate-900 px-2.5 py-1 rounded-lg text-white font-black uppercase tracking-widest">${a.type}</span>
+                                <span class="text-[9px] bg-indigo-600 px-2.5 py-1 rounded-lg text-white font-black uppercase tracking-widest">${a.type}</span>
                             </div>
                             <div class="flex flex-col mt-2 space-y-1">
-                                <span class="text-[10px] text-slate-400 font-black uppercase tracking-widest">Maliyet: ₺${a.buy_price.toLocaleString('tr-TR', {minimumFractionDigits: 2})}</span>
-                                <span class="text-[10px] text-indigo-600 font-black uppercase tracking-widest bg-indigo-50 w-fit px-2 py-0.5 rounded-md border border-indigo-100">Güncel: ₺${currentUnitPrice.toLocaleString('tr-TR', {minimumFractionDigits: 2})}</span>
+                                <span class="text-[10px] text-slate-400 font-black uppercase tracking-widest">MALİYET: ₺${a.buy_price.toLocaleString('tr-TR', {minimumFractionDigits: 2})}</span>
+                                <span class="text-[10px] text-indigo-600 font-black uppercase tracking-widest bg-indigo-50 w-fit px-2 py-0.5 rounded-md border border-indigo-100">UZMANPARA: ₺${currentPrice.toLocaleString('tr-TR', {minimumFractionDigits: 2})}</span>
                             </div>
                         </div>
                     </div>
-                    <div class="flex items-center gap-12">
-                        <div class="text-right">
+                    <div class="flex items-center gap-12 text-right">
+                        <div>
                             <div class="font-black text-2xl text-slate-900 tracking-tighter leading-none">₺${currentValue.toLocaleString('tr-TR', {minimumFractionDigits:2})}</div>
                             <div class="text-xs font-black ${pnl >= 0 ? 'text-emerald-500' : 'text-rose-500'} flex items-center justify-end gap-1 uppercase tracking-widest mt-1">
                                 ${pnl >= 0 ? '▲' : '▼'} %${Math.abs(perc).toFixed(2)}
@@ -542,7 +464,7 @@
             allocationChart = new Chart(ctx, {
                 type: 'doughnut',
                 data: { labels: Object.keys(dataMap), datasets: [{ data: Object.values(dataMap), backgroundColor: ['#4f46e5', '#10b981', '#f59e0b', '#f43f5e'], borderWidth: 0 }] },
-                options: { plugins: { legend: { display: false } }, cutout: '82%', responsive: true, maintainAspectRatio: false }
+                options: { plugins: { legend: { display: false } }, cutout: '85%', responsive: true, maintainAspectRatio: false }
             });
         }
 
@@ -559,23 +481,23 @@
 
             document.getElementById('detail-stats').innerHTML = `
                 <div class="bg-slate-50 p-7 rounded-[2.5rem] border border-slate-100 shadow-sm text-center">
-                    <p class="text-[9px] text-slate-400 font-black mb-1 uppercase tracking-widest uppercase">Maliyet</p>
-                    <p class="font-black text-2xl text-slate-800 tracking-tighter leading-none text-center">₺${cost.toLocaleString('tr-TR')}</p>
+                    <p class="text-[9px] text-slate-400 font-black mb-1 uppercase tracking-widest">Maliyet</p>
+                    <p class="font-black text-2xl text-slate-800 tracking-tighter leading-none">₺${cost.toLocaleString('tr-TR')}</p>
                 </div>
                 <div class="bg-indigo-50 p-7 rounded-[2.5rem] border border-indigo-100 shadow-sm text-center">
-                    <p class="text-[9px] text-indigo-500 font-black mb-1 uppercase tracking-widest uppercase">Piyasa Değeri</p>
-                    <p class="font-black text-2xl text-indigo-700 tracking-tighter leading-none text-center">₺${val.toLocaleString('tr-TR')}</p>
+                    <p class="text-[9px] text-indigo-500 font-black mb-1 uppercase tracking-widest">Piyasa</p>
+                    <p class="font-black text-2xl text-indigo-700 tracking-tighter leading-none">₺${val.toLocaleString('tr-TR')}</p>
                 </div>
-                <div class="${net >= 0 ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-rose-50 text-rose-700 border-rose-100'} p-7 rounded-[2.5rem] border shadow-sm text-center">
-                    <p class="text-[9px] opacity-70 font-black mb-1 uppercase tracking-widest uppercase">Kâr / Zarar</p>
-                    <p class="font-black text-2xl tracking-tighter leading-none text-center">₺${Math.abs(net).toLocaleString('tr-TR')}</p>
+                <div class="${net >= 0 ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'} p-7 rounded-[2.5rem] border shadow-sm text-center">
+                    <p class="text-[9px] opacity-70 font-black mb-1 uppercase tracking-widest">Kâr / Zarar</p>
+                    <p class="font-black text-2xl tracking-tighter leading-none">₺${Math.abs(net).toLocaleString('tr-TR')}</p>
                 </div>`;
 
             const ctx = document.getElementById('detailChart').getContext('2d');
             if (detailChart) detailChart.destroy();
             detailChart = new Chart(ctx, {
                 type: 'line',
-                data: { labels: ["ALIM", "T-3", "T-2", "T-1", "GÜNCEL"], datasets: [{ data: [asset.buy_price, asset.buy_price * 1.05, asset.buy_price * 0.95, asset.buy_price * 1.08, cur], borderColor: '#4f46e5', borderWidth: 6, pointRadius: 10, pointBackgroundColor: '#fff', pointBorderColor: '#4f46e5', tension: 0.45, fill: true, backgroundColor: 'rgba(79, 70, 229, 0.04)' }] },
+                data: { labels: ["ALIM", "T-3", "T-2", "T-1", "SİTE"], datasets: [{ data: [asset.buy_price, asset.buy_price * 1.05, asset.buy_price * 0.95, asset.buy_price * 1.08, cur], borderColor: '#4f46e5', borderWidth: 6, pointRadius: 10, pointBackgroundColor: '#fff', pointBorderColor: '#4f46e5', tension: 0.45, fill: true, backgroundColor: 'rgba(79, 70, 229, 0.04)' }] },
                 options: { scales: { y: { display: true }, x: { grid: { display: false } } }, plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false }
             });
         }
@@ -584,15 +506,14 @@
             if (portfolio.length === 0) return;
             const btn = document.getElementById('ai-btn');
             const content = document.getElementById('ai-content');
-            btn.disabled = true; btn.innerText = "VERİLER ANALİZ EDİLİYOR...";
-            const summary = portfolio.map(p => `- ${p.symbol}: Alış Maliyet ₺${p.buy_price.toFixed(2)}, Mevcut Piyasa ₺${(marketPrices[p.symbol] || p.buy_price).toFixed(2)}`).join('\n');
-            const prompt = `Sen profesyonel bir BIST yatırım danışmanısın. Kullanıcının maliyetleri ile anlık borsa fiyatları şu şekilde:\n${summary}\nLütfen portföydeki kar/zarar durumunu profesyonel terimlerle analiz et ve Türkçe olarak strateji ver.`;
+            btn.disabled = true; btn.innerText = "WEB VERİLERİ ANALİZ EDİLİYOR...";
+            const summary = portfolio.map(p => `- ${p.symbol}: Maliyet ₺${p.buy_price.toFixed(2)}, Piyasa ₺${(marketPrices[p.symbol] || p.buy_price).toFixed(2)}`).join('\n');
+            const prompt = `Sen Uzmanpara verilerini yorumlayan bir BIST danışmanısın. Kullanıcının maliyetleri ile siteden okunan anlık fiyatlar şunlar:\n${summary}\nKısa, öz, Türkçe analiz ver.`;
             try {
                 const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${geminiApiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }) });
                 const data = await res.json();
                 content.innerHTML = `<p class="fade-in text-[12px] leading-relaxed text-indigo-50 font-medium">${data.candidates?.[0]?.content?.parts?.[0]?.text}</p>`;
-                addLog("AI", "Portföy analiz raporu hazırlandı.");
-            } catch(e) { content.innerText = "Hata: AI şu an meşgul."; }
+            } catch(e) { content.innerText = "AI meşgul."; }
             finally { btn.disabled = false; btn.innerText = "ANALİZİ YENİLE"; }
         }
 
@@ -602,7 +523,7 @@
             const toast = document.createElement('div');
             const colors = { success: 'bg-emerald-600', error: 'bg-rose-600', info: 'bg-indigo-600' };
             toast.className = `${colors[type]} toast text-white p-6 rounded-[2.2rem] shadow-2xl min-w-[320px] pointer-events-auto flex items-start gap-4 border border-white/20`;
-            toast.innerHTML = `<div><i data-lucide="bell-ring" size="24"></i></div><div><p class="font-black text-sm uppercase leading-none mb-1.5 tracking-tight">${title}</p><p class="text-[10px] font-bold opacity-80 uppercase tracking-widest">${msg}</p></div>`;
+            toast.innerHTML = `<div><i data-lucide="bell-ring" size="24"></i></div><div><p class="font-black text-sm uppercase mb-1">${title}</p><p class="text-[9px] font-bold opacity-80 uppercase">${msg}</p></div>`;
             area.appendChild(toast); lucide.createIcons();
             setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateY(-30px)'; setTimeout(() => toast.remove(), 400); }, 4000);
         }
@@ -615,11 +536,13 @@
             if (container) { container.prepend(div); if (container.children.length > 8) container.lastChild.remove(); }
         }
 
+        function toggleAuthMode() { document.getElementById('auth-subtitle').innerText = "Hemen terminal hesabı oluşturun."; }
+
         function toggleModal(show, asset = null) {
             const m = document.getElementById('modal'); if (!m) return;
             m.classList.toggle('hidden', !show); m.classList.toggle('flex', show);
             if (show && asset) {
-                document.getElementById('modal-title').innerText = "KAYDI DÜZENLE";
+                document.getElementById('modal-title').innerText = "DÜZENLE";
                 document.getElementById('editingId').value = asset.id;
                 document.getElementById('type').value = asset.type;
                 document.getElementById('symbol').value = asset.symbol;
@@ -627,7 +550,7 @@
                 document.getElementById('buyPrice').value = asset.buy_price;
                 document.getElementById('totalInvested').dispatchEvent(new Event('input'));
             } else if (show) { 
-                document.getElementById('modal-title').innerText = "YENİ YATIRIM GİRİŞİ"; 
+                document.getElementById('modal-title').innerText = "VARLIK EKLE";
                 document.getElementById('asset-form').reset(); 
                 document.getElementById('editingId').value = ""; 
                 document.getElementById('calc-info').innerText = "VERİ GİRİŞİ BEKLENİYOR..."; 
@@ -637,7 +560,7 @@
 
         async function deleteAsset(id, symbol) {
             const { error } = await sbClient.from('investments').delete().eq('id', id);
-            if (!error) { portfolio = portfolio.filter(p => p.id !== id); renderPortfolio(); updateAllocationChart(); showNotification("SİSTEM", symbol + " KALDIRILDI", "success"); }
+            if (!error) { portfolio = portfolio.filter(p => p.id !== id); renderPortfolio(); updateAllocationChart(); showNotification("SİSTEM", symbol + " SİLİNDİ", "success"); }
         }
 
         function editAsset(id) { toggleModal(true, portfolio.find(p => p.id === id)); }
