@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InvestAI - Akıllı Yatırım Takip</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Supabase JS Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        .log-container { max-height: 180px; overflow-y: auto; scrollbar-width: thin; }
+        @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+        .fade-in { animation: fade-in 0.3s ease-out; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-white z-[100] flex items-center justify-center">
+        <div class="text-center">
+            <div class="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p class="text-slate-500 font-medium">Bağlantı Kuruluyor...</p>
+        </div>
+    </div>
+
+    <!-- Auth Screen -->
+    <div id="auth-screen" class="hidden min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-indigo-50 to-slate-100">
+        <div class="bg-white p-8 rounded-[2.5rem] shadow-2xl w-full max-w-md border border-white">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-indigo-600 rounded-3xl flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="wallet" class="text-white w-8 h-8"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-slate-800">InvestAI</h1>
+                <p id="auth-subtitle" class="text-slate-500 mt-2 text-sm font-medium">Yatırımlarınızı canlı verilerle takip edin</p>
+            </div>
+
+            <div class="space-y-4">
+                <input id="auth-email" type="email" placeholder="E-posta" class="w-full p-4 bg-slate-50 rounded-2xl border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none">
+                <input id="auth-password" type="password" placeholder="Şifre" class="w-full p-4 bg-slate-50 rounded-2xl border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none">
+                <div id="auth-error" class="hidden text-rose-500 text-xs font-semibold p-3 bg-rose-50 rounded-xl text-center"></div>
+                <button id="auth-main-btn" onclick="handleAuth()" class="w-full py-4 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-all shadow-lg flex items-center justify-center gap-2">
+                    <span id="auth-btn-text">Giriş Yap</span>
+                    <i data-lucide="arrow-right" size="18"></i>
+                </button>
+                <div class="text-center mt-4">
+                    <button id="auth-toggle-btn" onclick="toggleAuthMode()" class="text-indigo-600 text-sm font-semibold">Hesabınız yok mu? Kayıt olun</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Screen -->
+    <div id="app-screen" class="hidden min-h-screen p-4 md:p-8">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 space-y-6">
+                <header class="flex justify-between items-center bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600"><i data-lucide="line-chart"></i></div>
+                        <div>
+                            <h1 class="text-xl font-bold">Portföy</h1>
+                            <p id="user-display" class="text-slate-400 text-xs font-medium"></p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="handleLogout()" class="p-3 text-slate-400 hover:text-rose-500"><i data-lucide="log-out" size="20"></i></button>
+                        <button onclick="toggleModal(true)" class="bg-indigo-600 text-white px-5 py-2.5 rounded-2xl font-bold flex items-center gap-2 shadow-lg"><i data-lucide="plus" size="20"></i> Ekle</button>
+                    </div>
+                </header>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white p-6 rounded-3xl border border-slate-100"><div class="text-slate-400 text-xs font-bold mb-1 uppercase">GÜNCEL DEĞER</div><div id="total-value" class="text-2xl font-bold">₺0,00</div></div>
+                    <div id="pnl-card" class="bg-white p-6 rounded-3xl border border-slate-100 border-l-4"><div class="text-slate-400 text-xs font-bold mb-1 uppercase">KAR/ZARAR</div><div id="total-pnl" class="text-2xl font-bold">₺0,00</div></div>
+                    <div class="bg-white p-6 rounded-3xl border border-slate-100"><div class="text-slate-400 text-xs font-bold mb-1 uppercase">VERİM</div><div id="pnl-percent" class="text-2xl font-bold">%0,00</div></div>
+                </div>
+
+                <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden min-h-[400px]">
+                    <div id="asset-list" class="divide-y divide-slate-50"></div>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-indigo-900 text-white p-8 rounded-[2rem] shadow-2xl relative overflow-hidden">
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-3 mb-6"><i data-lucide="brain-circuit"></i><h2 class="text-xl font-bold">AI Danışman</h2></div>
+                        <div id="ai-content" class="bg-white/10 rounded-2xl p-5 mb-6 text-sm min-h-[100px]"><p class="opacity-70 italic text-xs">Analiz için butona basın.</p></div>
+                        <button onclick="getAIAdvice()" id="ai-btn" class="w-full py-4 bg-white text-indigo-900 rounded-2xl font-bold shadow-xl">Analiz Et</button>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-3xl border border-slate-100">
+                    <h3 class="font-bold flex items-center gap-2 mb-4"><i data-lucide="history" class="text-indigo-500"></i> Akış</h3>
+                    <div id="log-container" class="log-container space-y-2 text-[10px]"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-[2rem] w-full max-w-md shadow-2xl overflow-hidden" id="modal-box">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                <h3 id="modal-title" class="text-xl font-bold">Yatırım Girişi</h3>
+                <button onclick="toggleModal(false)" class="text-slate-400">✕</button>
+            </div>
+            <form id="asset-form" class="p-6 space-y-4">
+                <input type="hidden" id="editingId" value="">
+                <select id="type" class="w-full p-4 bg-slate-50 rounded-2xl ring-1 ring-slate-200 outline-none">
+                    <option value="hisse">Borsa İstanbul (Hisse)</option>
+                    <option value="kripto">Kripto Para</option>
+                    <option value="altin">Altın / Emtia</option>
+                    <option value="doviz">Döviz</option>
+                </select>
+                <input id="symbol" type="text" placeholder="Sembol (BTC, THYAO)" required class="w-full p-4 bg-slate-50 rounded-2xl ring-1 ring-slate-200 outline-none uppercase">
+                <div class="grid grid-cols-2 gap-4">
+                    <input id="totalInvested" type="number" step="any" placeholder="Yatırılan ₺" required class="w-full p-4 bg-slate-50 rounded-2xl ring-1 ring-slate-200 outline-none">
+                    <input id="buyPrice" type="number" step="any" placeholder="Alış Fiyatı ₺" required class="w-full p-4 bg-slate-50 rounded-2xl ring-1 ring-slate-200 outline-none">
+                </div>
+                <div class="p-4 bg-indigo-50 rounded-2xl text-[10px] text-indigo-800 text-center font-bold uppercase" id="calc-info">Lütfen değerleri girin.</div>
+                <button type="submit" id="save-btn" class="w-full py-4 bg-indigo-600 text-white rounded-2xl font-bold shadow-lg">Kaydet</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const SB_URL = "https://ihkermhphlquvwklwtun.supabase.co";
+        const SB_KEY = "sb_publishable_HsvhilHIDDBQezTDiKvkmg_G5y7vELZ";
+        const sbClient = supabase.createClient(SB_URL, SB_KEY);
+        const apiKey = ""; // Gemini
+
+        let portfolio = [];
+        let isLoginMode = true;
+        let currentUser = null;
+        let marketPrices = { 'THYAO': 285.5, 'BTC': 2100000, 'USD': 32.5, 'GRAM_ALTIN': 2450 };
+
+        // --- AUTH ---
+        async function initAuth() {
+            // Mevcut oturumu kontrol et
+            const { data: { session } } = await sbClient.auth.getSession();
+            if (session) onLoginSuccess(session.user);
+            else document.getElementById('loading-overlay').classList.add('hidden');
+
+            // Değişiklikleri dinle
+            sbClient.auth.onAuthStateChange((event, session) => {
+                document.getElementById('loading-overlay').classList.add('hidden');
+                if (session) onLoginSuccess(session.user);
+                else showAuthScreen();
+            });
+        }
+
+        async function handleAuth() {
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            const errorEl = document.getElementById('auth-error');
+            if (!email || !password) return;
+
+            errorEl.classList.add('hidden');
+            const btn = document.getElementById('auth-main-btn');
+            btn.disabled = true;
+
+            try {
+                let result = isLoginMode 
+                    ? await sbClient.auth.signInWithPassword({ email, password })
+                    : await sbClient.auth.signUp({ email, password });
+                
+                if (result.error) throw result.error;
+            } catch (err) {
+                errorEl.innerText = err.message;
+                errorEl.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        function toggleAuthMode() {
+            isLoginMode = !isLoginMode;
+            document.getElementById('auth-btn-text').innerText = isLoginMode ? 'Giriş Yap' : 'Kayıt Ol';
+            document.getElementById('auth-toggle-btn').innerText = isLoginMode ? 'Hesabınız yok mu? Kayıt olun' : 'Zaten hesabınız var mı? Giriş yapın';
+        }
+
+        function onLoginSuccess(user) {
+            currentUser = user;
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('app-screen').classList.remove('hidden');
+            document.getElementById('user-display').innerText = user.email;
+            fetchPortfolio();
+            setInterval(fetchLivePrices, 15000);
+            fetchLivePrices();
+        }
+
+        function showAuthScreen() {
+            document.getElementById('auth-screen').classList.remove('hidden');
+            document.getElementById('app-screen').classList.add('hidden');
+        }
+
+        // --- DATA ---
+        async function fetchPortfolio() {
+            if (!currentUser) return;
+            const { data, error } = await sbClient.from('investments').select('*').eq('user_id', currentUser.id);
+            if (!error) {
+                portfolio = data || [];
+                renderPortfolio();
+                addLog("VERİ", "Yatırımlar başarıyla yüklendi.");
+            } else {
+                addLog("HATA", "Veri çekilemedi: " + error.message);
+            }
+        }
+
+        async function saveInvestment(e) {
+            e.preventDefault();
+            const editingId = document.getElementById('editingId').value;
+            const type = document.getElementById('type').value;
+            const symbol = document.getElementById('symbol').value.toUpperCase().trim();
+            const total = parseFloat(document.getElementById('totalInvested').value);
+            const price = parseFloat(document.getElementById('buyPrice').value);
+            const amount = total / price;
+
+            const payload = { user_id: currentUser.id, type, symbol, amount, buy_price: price };
+
+            const action = editingId 
+                ? sbClient.from('investments').update(payload).eq('id', editingId)
+                : sbClient.from('investments').insert([payload]);
+
+            const { error } = await action;
+            if (!error) {
+                toggleModal(false);
+                fetchPortfolio();
+                addLog("BAŞARI", editingId ? "Düzenleme kaydedildi." : "Yeni yatırım eklendi.");
+            } else {
+                addLog("HATA", "Kayıt hatası: " + error.message);
+            }
+        }
+
+        async function deleteAsset(id) {
+            const { error } = await sbClient.from('investments').delete().eq('id', id);
+            if (!error) {
+                portfolio = portfolio.filter(p => p.id !== id);
+                renderPortfolio();
+                addLog("SİSTEM", "Kayıt silindi.");
+            }
+        }
+
+        // --- UI & PRICE ---
+        async function fetchLivePrices() {
+            try {
+                // Kripto Simülasyon/API karması
+                const fx = await fetch('https://api.exchangerate-api.com/v4/latest/USD').then(r => r.json());
+                if (fx) marketPrices['USD'] = fx.rates.TRY;
+
+                portfolio.forEach(a => {
+                    const base = marketPrices[a.symbol] || a.buy_price;
+                    marketPrices[a.symbol] = parseFloat((base * (1 + (Math.random() - 0.5) * 0.005)).toFixed(2));
+                });
+                renderPortfolio();
+            } catch(e) {}
+        }
+
+        function renderPortfolio() {
+            const list = document.getElementById('asset-list');
+            let totalVal = 0, totalCost = 0;
+
+            if (portfolio.length === 0) {
+                list.innerHTML = `<div class="p-20 text-center text-slate-300">Portföyünüz boş.</div>`;
+                updateStats(0, 0);
+                return;
+            }
+
+            list.innerHTML = portfolio.map(a => {
+                const current = marketPrices[a.symbol] || a.buy_price;
+                const cost = a.buy_price * a.amount;
+                const val = current * a.amount;
+                const pnl = val - cost;
+                const perc = (pnl / cost) * 100;
+                totalVal += val; totalCost += cost;
+
+                return `
+                <div class="p-6 flex justify-between items-center hover:bg-slate-50 transition-all group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center font-bold text-indigo-600">${a.symbol.slice(0,2)}</div>
+                        <div><div class="font-bold">${a.symbol}</div><div class="text-[10px] text-slate-400">Yatırılan: ₺${cost.toLocaleString()}</div></div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="text-right">
+                            <div class="font-bold text-lg">₺${val.toLocaleString()}</div>
+                            <div class="text-xs font-bold ${pnl >= 0 ? 'text-emerald-500' : 'text-rose-500'}">${pnl >= 0 ? '▲' : '▼'} %${Math.abs(perc).toFixed(2)}</div>
+                        </div>
+                        <div class="flex opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onclick="editAsset(${a.id})" class="p-2 text-slate-300 hover:text-indigo-600"><i data-lucide="pencil" size="16"></i></button>
+                            <button onclick="deleteAsset(${a.id})" class="p-2 text-slate-300 hover:text-rose-500"><i data-lucide="trash-2" size="16"></i></button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+            lucide.createIcons();
+            updateStats(totalVal, totalCost);
+        }
+
+        function updateStats(val, cost) {
+            const pnl = val - cost;
+            const perc = cost > 0 ? (pnl / cost) * 100 : 0;
+            document.getElementById('total-value').innerText = `₺${val.toLocaleString()}`;
+            document.getElementById('total-pnl').innerText = `${pnl >= 0 ? '+' : ''}₺${pnl.toLocaleString()}`;
+            document.getElementById('total-pnl').className = `text-2xl font-bold ${pnl >= 0 ? 'text-emerald-600' : 'text-rose-600'}`;
+            document.getElementById('pnl-percent').innerText = `%${perc.toFixed(2)}`;
+            document.getElementById('pnl-percent').className = `text-2xl font-bold ${perc >= 0 ? 'text-emerald-600' : 'text-rose-600'}`;
+        }
+
+        async function getAIAdvice() {
+            if (portfolio.length === 0) return;
+            const btn = document.getElementById('ai-btn');
+            btn.disabled = true; btn.innerText = "Analiz Ediliyor...";
+            const summary = portfolio.map(p => `- ${p.symbol}: ₺${(p.buy_price * p.amount).toFixed(2)} yatırıldı, güncel ₺${(marketPrices[p.symbol] * p.amount).toFixed(2)}`).join('\n');
+            const prompt = `Yatırım danışmanısın. Portföy:\n${summary}\nKısa ve öz Türkçe analiz ver.`;
+
+            try {
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                });
+                const data = await res.json();
+                document.getElementById('ai-content').innerHTML = `<p class="fade-in text-xs">${data.candidates?.[0]?.content?.parts?.[0]?.text}</p>`;
+            } catch(e) { document.getElementById('ai-content').innerText = "AI meşgul."; }
+            finally { btn.disabled = false; btn.innerText = "Yeniden Analiz Et"; }
+        }
+
+        // --- HELPERS ---
+        function addLog(tag, msg) {
+            const div = document.createElement('div');
+            div.className = "flex gap-2 p-2 bg-slate-50 rounded-xl fade-in";
+            div.innerHTML = `<span class="bg-indigo-100 text-indigo-600 px-1 font-black rounded">${tag}</span><p>${msg}</p>`;
+            const container = document.getElementById('log-container');
+            container.prepend(div);
+            if (container.children.length > 5) container.lastChild.remove();
+        }
+
+        function toggleModal(show, asset = null) {
+            const m = document.getElementById('modal');
+            m.classList.toggle('hidden', !show);
+            m.classList.toggle('flex', show);
+            if (show) {
+                if (asset) {
+                    document.getElementById('modal-title').innerText = "Düzenle";
+                    document.getElementById('editingId').value = asset.id;
+                    document.getElementById('type').value = asset.type;
+                    document.getElementById('symbol').value = asset.symbol;
+                    document.getElementById('totalInvested').value = (asset.buy_price * asset.amount).toFixed(2);
+                    document.getElementById('buyPrice').value = asset.buy_price;
+                } else {
+                    document.getElementById('modal-title').innerText = "Yeni Giriş";
+                    document.getElementById('asset-form').reset();
+                    document.getElementById('editingId').value = "";
+                }
+            }
+            lucide.createIcons();
+        }
+
+        function editAsset(id) { toggleModal(true, portfolio.find(p => p.id === id)); }
+        document.getElementById('asset-form').onsubmit = saveInvestment;
+        document.getElementById('totalInvested').oninput = document.getElementById('buyPrice').oninput = () => {
+            const t = parseFloat(document.getElementById('totalInvested').value);
+            const p = parseFloat(document.getElementById('buyPrice').value);
+            document.getElementById('calc-info').innerText = (t > 0 && p > 0) ? `${(t/p).toFixed(4)} Birim alınacak.` : "Lütfen değer girin.";
+        };
+
+        function handleLogout() { sbClient.auth.signOut(); }
+        initAuth();
+    </script>
+</body>
+</html>
